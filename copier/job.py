@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass, field
 from logging import LoggerAdapter, Logger
 from threading import Lock
@@ -37,18 +38,18 @@ class Job(object):
         self.logger.info(self)
 
     @property
-    def size(self):
-        return round(self.file.get("size", 0) / pow(2, 20))
+    def size_mb(self):  # mega bytes
+        size = 0
+        if os.path.exists(self.local_path):
+            size = os.stat(self.local_path).st_size
+        if "size" in self.file:
+            size = self.file["size"]
+        return round(size / pow(2, 20))
 
     @property
     def basename(self):
         return self.fileid + ".aes"
 
-    @property
-    def is_big_file(self):
-        if "size" not in self.file:
-            return True
-        return self.file["size"] > self.config["basic"]["big_file_threshold"]
-
     def __str__(self):
-        return f"status={self.status} size={self.size}MB local_path={self.local_path}"
+        size = self.size_mb
+        return f"status={self.status} {size=}MB local_path={self.local_path}"

@@ -9,7 +9,6 @@ basic:
   pool_size: 3
   files_per_run: 50
   file_age_threshold: 14  # days
-  big_file_threshold: 100000000  # 100 MB
 server:
   host: ""
   apikey: ""
