@@ -1,0 +1,6 @@
+tmp/
+.pytest_cache/
+.vscode/
+.idea/
+venv/
+config/
