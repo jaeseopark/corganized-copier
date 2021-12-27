@@ -1,0 +1,2 @@
+class NeglectableError(RuntimeError):
+    pass
