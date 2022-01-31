@@ -40,7 +40,7 @@ class Job(object):
     @property
     def size_mb(self):  # mega bytes
         size = 0
-        if os.path.exists(self.local_path):
+        if self.local_path and os.path.exists(self.local_path):
             size = os.stat(self.local_path).st_size
         if "size" in self.file:
             size = self.file["size"]
