@@ -19,7 +19,9 @@ class CorganizeClientWrapper(CorganizeClient):
         max_filesize: int = config["max_filesize"]
 
         def is_missing(file: dict):
-            return file["fileid"] + ".aes" not in local_filenames
+            is_encrypted_file_missing = file["fileid"] + ".aes" not in local_filenames
+            is_decrypted_file_missing = file["fileid"] + ".dec" not in local_filenames
+            return is_encrypted_file_missing and is_decrypted_file_missing
 
         def is_downloadable(file: dict):
             return is_supported(file.get("storageservice"))
