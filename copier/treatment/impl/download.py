@@ -9,7 +9,7 @@ def download(job: Job) -> Job:
     job.status = "downloading"
 
     download_folder_path = job.config["download"]["path"]
-    target_path = os.path.join(download_folder_path, job.basename)
+    target_path = os.path.join(download_folder_path, job.enc_basename)
 
     request = DownloadRequest(job.file["locationref"], target_path, job.config["download"])
 

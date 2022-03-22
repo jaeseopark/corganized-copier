@@ -14,11 +14,11 @@ from copier.config import get_default_config
 from copier.downloader.factory import get_download_client
 from copier.error import NeglectableError
 from copier.job import Job
-from copier.treatment.impl import download, move
+from copier.treatment.impl import download, move, decrypt
 from copier.utils.cc_wrapper import CorganizeClientWrapper
 from copier.utils.mpsafelog import get_mpsafe_logger
 
-TREATMENTS = (download, move)
+TREATMENTS = (download, decrypt, move)
 
 
 def get_local_config() -> dict:
@@ -58,6 +58,7 @@ def run_copier():
     touch(config["basic"]["log_path"])
 
     cc = CorganizeClientWrapper(config["server"])
+    config["remote"] = cc.get_user_config()
 
     local_filenames = os.listdir(config["basic"]["backup_path"])
     missing_files = cc.get_missing_files(local_filenames, config=config["basic"])
