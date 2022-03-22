@@ -10,7 +10,6 @@ basic:
   files_per_run: 50
   file_age_threshold: 14  # days
   max_filesize: 1500000000 # 1.5 GB
-  aeskey:
 server:
   host: ""
   apikey: ""

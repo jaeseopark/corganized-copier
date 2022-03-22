@@ -9,7 +9,7 @@ BUFFER_SIZE = 65536
 def decrypt(job: Job) -> Job:
     job.status = "decrypting"
 
-    aes_key = job.config["basic"]["aeskey"]
+    aes_key = job.config["remote"]["aeskey"]
     assert aes_key and isinstance(aes_key, str)
 
     dec_path = job.local_path + ".dec"

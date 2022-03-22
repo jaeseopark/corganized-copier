@@ -58,6 +58,7 @@ def run_copier():
     touch(config["basic"]["log_path"])
 
     cc = CorganizeClientWrapper(config["server"])
+    config["remote"] = cc.get_user_config()
 
     local_filenames = os.listdir(config["basic"]["backup_path"])
     missing_files = cc.get_missing_files(local_filenames, config=config["basic"])
