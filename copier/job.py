@@ -47,8 +47,12 @@ class Job(object):
         return round(size / pow(2, 20))
 
     @property
-    def basename(self):
+    def enc_basename(self):
         return self.fileid + ".aes"
+
+    @property
+    def dec_basename(self):
+        return self.fileid + ".dec"
 
     def __str__(self):
         size = self.size_mb

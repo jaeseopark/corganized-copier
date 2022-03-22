@@ -3,3 +3,5 @@ gdrivewrapper==0.0.17
 httplib2==0.15.0
 commmons==0.0.16
 corganizeclient==0.0.6
+pyAesCrypt==0.4.3
+pycryptodome==3.6.6
