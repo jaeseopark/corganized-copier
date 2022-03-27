@@ -9,6 +9,11 @@ basic:
     path: /backup
     dynamic_ext_override:
       video/x-matroska: mkv
+      video/x-flv: flv
+      video/quicktime: mov
+      video/x-msvideo: avi
+      video/x-ms-wmv: wmv
+      video/mpeg: mpeg
   pool_size: 3
   files_per_run: 50
   file_age_threshold: 14  # days
