@@ -54,13 +54,13 @@ def copy_file(file: dict, config: dict, lock: Lock):
 def run_copier():
     config = get_local_config()
     touch_directory(config["download"]["path"])
-    touch_directory(config["basic"]["backup_path"])
+    touch_directory(config["basic"]["backup"]["path"])
     touch(config["basic"]["log_path"])
 
     cc = CorganizeClientWrapper(config["server"])
     config["remote"] = cc.get_user_config()
 
-    local_filenames = os.listdir(config["basic"]["backup_path"])
+    local_filenames = os.listdir(config["basic"]["backup"]["path"])
     missing_files = cc.get_missing_files(local_filenames, config=config["basic"])
 
     lock = Manager().Lock()

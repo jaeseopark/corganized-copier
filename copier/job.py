@@ -51,8 +51,17 @@ class Job(object):
         return self.fileid + ".aes"
 
     @property
-    def dec_basename(self):
-        return self.fileid + ".dec"
+    def normalized_basename(self):
+        mimetype = self.file.get("mimetype")
+        default_ext = self.config["basic"]["backup"]["default_ext"]
+        dynamic_ext_override = self.config["basic"]["backup"]["dynamic_ext_override"]
+
+        def get_extension() -> str:
+            if not mimetype:
+                return default_ext
+            return dynamic_ext_override.get(mimetype) or mimetype.split('/')[1]
+
+        return f"{self.fileid}.{get_extension()}"
 
     def __str__(self):
         size = self.size_mb
