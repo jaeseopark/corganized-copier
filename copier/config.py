@@ -5,7 +5,10 @@ import yaml
 _DEFAULT = """
 basic:
   log_path: /shared/copier.log
-  backup_path: /backup
+  backup:
+    path: /backup
+    dynamic_ext_override:
+      video/x-matroska: mkv
   pool_size: 3
   files_per_run: 50
   file_age_threshold: 14  # days
