@@ -7,13 +7,9 @@ basic:
   log_path: /shared/copier.log
   backup:
     path: /backup
-    dynamic_ext_override:
-      video/x-matroska: mkv
-      video/x-flv: flv
-      video/quicktime: mov
-      video/x-msvideo: avi
-      video/x-ms-wmv: wmv
-      video/mpeg: mpeg
+    default_ext: dec
+    mimetype_ext_override:
+      application/zip: zdec
   pool_size: 3
   files_per_run: 50
   file_age_threshold: 14  # days

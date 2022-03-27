@@ -54,14 +54,9 @@ class Job(object):
     def normalized_basename(self):
         mimetype = self.file.get("mimetype")
         default_ext = self.config["basic"]["backup"]["default_ext"]
-        dynamic_ext_override = self.config["basic"]["backup"]["dynamic_ext_override"]
-
-        def get_extension() -> str:
-            if not mimetype:
-                return default_ext
-            return dynamic_ext_override.get(mimetype) or mimetype.split('/')[1]
-
-        return f"{self.fileid}.{get_extension()}"
+        mimetype_ext_override = self.config["basic"]["backup"]["mimetype_ext_override"]
+        ext = mimetype_ext_override.get(mimetype) or default_ext
+        return f"{self.fileid}.{ext}"
 
     def __str__(self):
         size = self.size_mb

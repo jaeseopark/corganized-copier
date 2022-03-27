@@ -21,7 +21,8 @@ class CorganizeClientWrapper(CorganizeClient):
         def is_missing(file: dict):
             is_encrypted_file_missing = file["fileid"] + ".aes" not in local_filenames
             is_decrypted_file_missing = file["fileid"] + ".dec" not in local_filenames
-            return is_encrypted_file_missing and is_decrypted_file_missing
+            is_decrypted_zip_file_missing = file["fileid"] + ".zdec" not in local_filenames
+            return is_encrypted_file_missing and (is_decrypted_file_missing or is_decrypted_zip_file_missing)
 
         def is_downloadable(file: dict):
             return is_supported(file.get("storageservice"))
