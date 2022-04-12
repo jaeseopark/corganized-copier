@@ -1,6 +1,5 @@
 from typing import List
 
-from commmons import now_seconds
 from corganizeclient.client import CorganizeClient
 
 from copier.downloader.factory import is_supported
@@ -32,7 +31,7 @@ class CorganizeClientWrapper(CorganizeClient):
         def is_active(file: dict) -> bool:
             return file.get("dateactivated", 0) > 0
 
-        active_files = self.get_stale_files(limit=QUERY_LIMIT)
-        missing = [file for file in active_files if
+        stale_files = self.get_stale_files(limit=QUERY_LIMIT)
+        missing = [file for file in stale_files if
                    is_missing_locally(file) and is_downloadable(file) and is_adequate_size(file) and is_active(file)]
         return missing[:limit]
