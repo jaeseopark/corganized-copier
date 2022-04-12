@@ -33,7 +33,7 @@ class CorganizeClientWrapper(CorganizeClient):
         def is_adequate_size(file: dict):
             return file.get("size", 0) < max_filesize
 
-        active_files = self.get_active_files(limit=QUERY_LIMIT)
+        active_files = self.get_stale_files(limit=QUERY_LIMIT)
         missing = [file for file in active_files if
                    is_missing(file) and is_downloadable(file) and is_new(file) and is_adequate_size(file)]
         return missing[:limit]
