@@ -13,13 +13,13 @@ class CorganizeClientWrapper(CorganizeClient):
         super().__init__(server_config["host"], server_config["apikey"])
 
     def get_missing_files(self, local_filenames: List[str], config: dict):
-        local_filenames = set(local_filenames)
+        local_filenames_set = set(local_filenames)
         limit: int = config["files_per_run"]
         max_filesize: int = config["max_filesize"]
 
         def is_missing_locally(file: dict) -> bool:
-            is_decrypted_file_missing = file["fileid"] + ".dec" not in local_filenames
-            is_decrypted_zip_file_missing = file["fileid"] + ".zdec" not in local_filenames
+            is_decrypted_file_missing = file["fileid"] + ".dec" not in local_filenames_set
+            is_decrypted_zip_file_missing = file["fileid"] + ".zdec" not in local_filenames_set
             return is_decrypted_file_missing and is_decrypted_zip_file_missing
 
         def is_downloadable(file: dict) -> bool:
