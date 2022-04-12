@@ -17,19 +17,22 @@ class CorganizeClientWrapper(CorganizeClient):
         limit: int = config["files_per_run"]
         max_filesize: int = config["max_filesize"]
 
-        def is_missing_locally(file: dict):
+        def is_missing_locally(file: dict) -> bool:
             is_encrypted_file_missing = file["fileid"] + ".aes" not in local_filenames
             is_decrypted_file_missing = file["fileid"] + ".dec" not in local_filenames
             is_decrypted_zip_file_missing = file["fileid"] + ".zdec" not in local_filenames
             return is_encrypted_file_missing and (is_decrypted_file_missing or is_decrypted_zip_file_missing)
 
-        def is_downloadable(file: dict):
+        def is_downloadable(file: dict) -> bool:
             return is_supported(file.get("storageservice"))
 
-        def is_adequate_size(file: dict):
+        def is_adequate_size(file: dict) -> bool:
             return file.get("size", 0) < max_filesize
+
+        def is_active(file: dict) -> bool:
+            return file.get("dateactivated", 0) > 0
 
         active_files = self.get_stale_files(limit=QUERY_LIMIT)
         missing = [file for file in active_files if
-                   is_missing_locally(file) and is_downloadable(file) and is_adequate_size(file)]
+                   is_missing_locally(file) and is_downloadable(file) and is_adequate_size(file) and is_active(file)]
         return missing[:limit]
