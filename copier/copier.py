@@ -62,6 +62,10 @@ def run_copier():
 
     local_filenames = os.listdir(config["basic"]["backup"]["path"])
     missing_files = cc.get_missing_files(local_filenames, config=config["basic"])
+    sum_size = sum([f.get("size", 0) for f in missing_files])
+
+    logger = with_timer(get_mpsafe_logger(config))
+    logger.info(f"{len(missing_files)=} {sum_size=}")
 
     lock = Manager().Lock()
 
