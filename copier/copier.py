@@ -19,6 +19,10 @@ from copier.utils.cc_wrapper import CorganizeClientWrapper
 from copier.utils.mpsafelog import get_mpsafe_logger
 
 TREATMENTS = (download, decrypt, move)
+PERMA_ERR_MSGS = (
+    "File is corrupted or not an AES Crypt (or pyAesCrypt) file.",
+    "Bad HMAC (file is corrupted)."
+)
 
 
 def get_local_config() -> dict:
@@ -33,6 +37,11 @@ def apply(job: Job, treatment: Callable[[Job], Job]) -> Job:
     except NeglectableError:
         job.logger.info("A neglectable error has occurred")
         return job
+    except ValueError as e:
+        stre = str(e)
+        if any([msg in stre for msg in PERMA_ERR_MSGS]):
+            job.corganize_client.delete_files([job.fileid])
+            raise StopIteration
     except Exception:
         # log and move on.
         job.logger.exception("An unknown error has occurred")
