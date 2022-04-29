@@ -14,7 +14,12 @@ def download(job: Job) -> Job:
     request = DownloadRequest(job.file["locationref"], target_path, job.config["download"])
 
     start = time.perf_counter()
-    job.download_client.download(request)
+    try:
+        job.download_client.download(request)
+    except FileNotFoundError:
+        if job.fileid.endswith("=="):
+            raise ValueError("This is an invalid file that cannot be downloaded")
+
     elapsed = time.perf_counter() - start
 
     speed = round(os.stat(target_path).st_size / elapsed / pow(10, 6), 2)
