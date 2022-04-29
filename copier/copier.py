@@ -21,7 +21,8 @@ from copier.utils.mpsafelog import get_mpsafe_logger
 TREATMENTS = (download, decrypt, move)
 PERMA_ERR_MSGS = (
     "File is corrupted or not an AES Crypt (or pyAesCrypt) file.",
-    "Bad HMAC (file is corrupted)."
+    "Bad HMAC (file is corrupted).",
+    "This is an invalid file that cannot be downloaded"
 )
 
 
