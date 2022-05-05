@@ -17,7 +17,7 @@ def download(job: Job) -> Job:
     try:
         job.download_client.download(request)
     except FileNotFoundError:
-        if job.fileid.endswith("=="):
+        if job.fileid.endswith("="):
             raise ValueError("This is an invalid file that cannot be downloaded")
 
     elapsed = time.perf_counter() - start
