@@ -5,7 +5,7 @@ from corganizeclient.client import CorganizeClient
 from copier.downloader.factory import is_supported
 
 # This number is set much higher than 'files_per_run' to avoid getting stuck with undownloadable files.
-QUERY_LIMIT = 1000
+QUERY_LIMIT = 50000
 
 
 class CorganizeClientWrapper(CorganizeClient):
@@ -31,7 +31,7 @@ class CorganizeClientWrapper(CorganizeClient):
         def is_active(file: dict) -> bool:
             return file.get("dateactivated", 0) > 0
 
-        stale_files = self.get_stale_files(limit=QUERY_LIMIT)
+        stale_files = self.get_stale_files(limit=QUERY_LIMIT, interval=15)
         missing = [file for file in stale_files if
                    is_missing_locally(file) and is_downloadable(file) and is_adequate_size(file) and is_active(file)]
 
