@@ -31,8 +31,10 @@ class CorganizeClientWrapper(CorganizeClient):
         def is_active(file: dict) -> bool:
             return file.get("dateactivated", 0) > 0
 
-        stale_files = self.get_stale_files(limit=QUERY_LIMIT, interval=15)
+        stale_files = self.get_stale_files(limit=QUERY_LIMIT, interval=0)
         missing = [file for file in stale_files if
                    is_missing_locally(file) and is_downloadable(file) and is_adequate_size(file) and is_active(file)]
+
+        missing.sort(key=lambda f: f.get("size", 0), reverse=True)
 
         return missing[:limit]
