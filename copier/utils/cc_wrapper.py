@@ -20,7 +20,7 @@ class CorganizeClientWrapper(CorganizeClient):
         def custom_filter(files: List[dict]) -> List[dict]:
             def iterate() -> Iterator[dict]:
                 for file in files:
-                    if exists_locally(file["fileid"], [".dec", ".zdec"]):
+                    if exists_locally(file["fileid"], ["dec", "zdec"]):
                         return
                     if not is_supported(file.get("storageservice")):
                         return
