@@ -1,11 +1,8 @@
-from typing import List
+from typing import List, Iterator
 
 from corganizeclient.client import CorganizeClient
 
 from copier.downloader.factory import is_supported
-
-# This number is set much higher than 'files_per_run' to avoid getting stuck with undownloadable files.
-QUERY_LIMIT = 50000
 
 
 class CorganizeClientWrapper(CorganizeClient):
@@ -17,24 +14,23 @@ class CorganizeClientWrapper(CorganizeClient):
         limit: int = config["files_per_run"]
         max_filesize: int = config["max_filesize"]
 
-        def is_missing_locally(file: dict) -> bool:
-            is_decrypted_file_missing = file["fileid"] + ".dec" not in local_filenames_set
-            is_decrypted_zip_file_missing = file["fileid"] + ".zdec" not in local_filenames_set
-            return is_decrypted_file_missing and is_decrypted_zip_file_missing
+        def exists_locally(fileid: str, extensions: List[str]) -> bool:
+            return any([f"{fileid}.{ext}" in local_filenames_set for ext in extensions])
 
-        def is_downloadable(file: dict) -> bool:
-            return is_supported(file.get("storageservice"))
+        def custom_filter(files: List[dict]) -> List[dict]:
+            def iterate() -> Iterator[dict]:
+                for file in files:
+                    if exists_locally(file["fileid"], [".dec", ".zdec"]):
+                        return
+                    if not is_supported(file.get("storageservice")):
+                        return
+                    if file.get("size", 0) > max_filesize:
+                        return
+                    if file.get("dateactivated", 0) == 0:
+                        return
 
-        def is_adequate_size(file: dict) -> bool:
-            return file.get("size", 0) < max_filesize
+                    yield file
 
-        def is_active(file: dict) -> bool:
-            return file.get("dateactivated", 0) > 0
+            return list(iterate())
 
-        stale_files = self.get_stale_files(limit=QUERY_LIMIT, interval=0)
-        missing = [file for file in stale_files if
-                   is_missing_locally(file) and is_downloadable(file) and is_adequate_size(file) and is_active(file)]
-
-        missing.sort(key=lambda f: f.get("size", 0), reverse=True)
-
-        return missing[:limit]
+        return self.get_stale_files(limit=limit, custom_filter=custom_filter)
