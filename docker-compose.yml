@@ -10,5 +10,5 @@ services:
       CRG_SERVER_HOST: ${CRG_SERVER_HOST}
       CRG_SERVER_APIKEY: ${CRG_SERVER_APIKEY}
     volumes:
-      - ${CONFIG_MNT_PATH}:/shared
+      - ${MNT_DIR}:/shared
       - ${BACKUP_DIR}:/backup
