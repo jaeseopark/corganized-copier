@@ -6,8 +6,9 @@ services:
     command: /bin/bash entrypoint.sh
     restart: unless-stopped
     environment:
-      TZ: America/Denver
-      CONFIG_OVERRIDE_PATH: /shared/config.yml
+      TZ: ${TZ}
+      CRG_SERVER_HOST: ${CRG_SERVER_HOST}
+      CRG_SERVER_APIKEY: ${CRG_SERVER_APIKEY}
     volumes:
-      - ./mnt:/shared
-      - ./mnt:/backup
+      - ${CONFIG_MNT_PATH}:/shared
+      - ${BACKUP_DIR}:/backup

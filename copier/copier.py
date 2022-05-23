@@ -6,11 +6,10 @@ from multiprocessing.pool import Pool
 from threading import Lock
 from typing import Callable
 
-import yaml
-from commmons import touch_directory, touch, merge
+from commmons import touch_directory, touch
 from commmons import with_timer
 
-from copier.config import get_default_config
+from copier.config import get_config
 from copier.downloader.factory import get_download_client
 from copier.error import NeglectableError
 from copier.job import Job
@@ -24,12 +23,6 @@ PERMA_ERR_MSGS = (
     "Bad HMAC (file is corrupted).",
     "This is an invalid file that cannot be downloaded"
 )
-
-
-def get_local_config() -> dict:
-    config = get_default_config()
-    with open(os.environ["CONFIG_OVERRIDE_PATH"]) as fp:
-        return merge(config, yaml.safe_load(fp))
 
 
 def apply(job: Job, treatment: Callable[[Job], Job]) -> Job:
@@ -62,7 +55,7 @@ def copy_file(file: dict, config: dict, lock: Lock):
 
 
 def run_copier():
-    config = get_local_config()
+    config = get_config()
     touch_directory(config["download"]["path"])
     touch_directory(config["basic"]["backup"]["path"])
     touch(config["basic"]["log_path"])
