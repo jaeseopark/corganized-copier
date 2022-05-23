@@ -1,6 +1,10 @@
 import io
+import os
 
 import yaml
+from commmons import merge
+
+_OVERRIDE_PATH = "/shared/config.yml"
 
 _DEFAULT = """
 basic:
@@ -24,6 +28,19 @@ download:
 """
 
 
-def get_default_config() -> dict:
+def _get_override() -> dict:
+    override_path = os.getenv("CONFIG_OVERRIDE_PATH") or _OVERRIDE_PATH
+    if os.path.exists(override_path):
+        with open(override_path) as fp:
+            return yaml.safe_load(fp)
+    return dict()
+
+
+def get_config() -> dict:
     with io.StringIO(_DEFAULT) as fp:
-        return yaml.safe_load(fp)
+        c = yaml.safe_load(fp)
+
+    return merge(c, _get_override(), dict(server=dict(
+        host=os.getenv("CRG_SERVER_HOST"),
+        apikey=os.getenv("CRG_SERVER_APIKEY")
+    )))

@@ -137,3 +137,5 @@ mnt/
 tmp/
 runner.py
 gdrivelogin.py
+
+.env
